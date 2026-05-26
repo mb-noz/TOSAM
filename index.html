@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOSAM — Digitales Regionalmedium</title>
+  <meta name="description" content="TOSAM ist ein digitales Regionalmedium über das, was Menschen vor Ort verbindet." />
+
+  <!-- Plus Jakarta Sans (Display) + DM Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --g900: #182A27;
+      --g800: #1E3632;
+      --g700: #2B5550;
+      --g500: #4A7A72;
+      --g200: #C8DEDA;
+      --g100: #E2EDEA;
+      --g50:  #F0F7F5;
+      --a700: #B87333;
+      --a500: #D4924A;
+      --a300: #E8BA7A;
+      --a100: #F5DDBA;
+      --a50:  #FDF6EA;
+      --cream:     #FDFAF4;
+      --cream-dim: #F5EFE5;
+      --cream-mid: #EDE6D8;
+      --tx1: #182A27;
+      --tx2: #455E5A;
+      --tx3: #7A8D89;
+      --bdr-l: rgba(24,42,39,0.09);
+      --bdr-m: rgba(24,42,39,0.15);
+      --sh-xs: 0 2px 12px rgba(24,42,39,0.05), 0 1px 3px rgba(24,42,39,0.03);
+      --sh-sm: 0 4px 24px rgba(24,42,39,0.07), 0 1px 6px rgba(24,42,39,0.03);
+      --sh-md: 0 8px 48px rgba(24,42,39,0.09), 0 2px 8px rgba(24,42,39,0.04);
+      --sh-lg: 0 20px 72px rgba(24,42,39,0.09), 0 4px 16px rgba(24,42,39,0.05);
+      --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --body:    'DM Sans', system-ui, sans-serif;
+      --ease:   cubic-bezier(0.32, 0.72, 0, 1);
+      --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body);
+      background: var(--cream);
+      color: var(--tx1);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── PROTO BADGE ── */
+    .proto {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      background: rgba(24,42,39,0.78); backdrop-filter: blur(12px);
+      color: rgba(253,250,244,0.55);
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 100px;
+      pointer-events: none;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 40px;
+      transition: padding .5s var(--ease), background .5s var(--ease), border-color .5s var(--ease);
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      background: rgba(253,250,244,0.92); backdrop-filter: blur(20px);
+      padding: 14px 40px; border-bottom-color: var(--bdr-l);
+    }
+    .nav-logo {
+      font-family: var(--display); font-size: 20px; font-weight: 700;
+      color: var(--g900); letter-spacing: -0.01em; text-decoration: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link {
+      font-size: 13px; font-weight: 400; color: var(--tx2);
+      text-decoration: none; transition: color .3s var(--ease);
+    }
+    .nav-link:hover { color: var(--g900); }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: var(--cream);
+      background: var(--g800); padding: 9px 22px; border-radius: 100px;
+      text-decoration: none; transition: background .3s var(--ease), transform .3s var(--ease);
+    }
+    .nav-cta:hover { background: var(--g700); transform: translateY(-1px); }
+    @media (max-width: 768px) {
+      .nav { padding: 16px 20px; }
+      .nav.scrolled { padding: 12px 20px; }
+      .nav-link { display: none; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .rv { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .rv.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; } .d4 { transition-delay: .32s; }
+
+    /* ── SHARED ── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--body); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--g700); background: var(--g100);
+      padding: 5px 12px; border-radius: 100px; margin-bottom: 18px;
+    }
+    .eyebrow::before {
+      content: ''; width: 5px; height: 5px;
+      border-radius: 50%; background: var(--g500); opacity: .8;
+    }
+    .eyebrow-inv { background: rgba(255,255,255,0.10); color: var(--g200); }
+    .eyebrow-inv::before { background: var(--g200); }
+
+    .hl {
+      font-family: var(--display);
+      font-size: clamp(24px, 3vw, 42px);
+      font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.02em; color: var(--g900); margin-bottom: 16px;
+    }
+    .sub {
+      font-size: clamp(15px, 1.6vw, 17px); font-weight: 300;
+      color: var(--tx2); line-height: 1.72; max-width: 520px;
+    }
+
+    .btn-p {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--body); font-size: 14px; font-weight: 500;
+      color: var(--cream); background: var(--g800);
+      border: none; cursor: pointer;
+      padding: 13px 26px; border-radius: 100px; text-decoration: none;
+      transition: background .4s var(--ease), transform .4s var(--ease), box-shadow .4s var(--ease);
+    }
+    .btn-p:hover { background: var(--g700); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(24,42,39,0.18); }
+    .btn-p:active { transform: scale(0.98); }
+    .btn-p .iw {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 12px;
+      transition: transform .35s var(--spring);
+    }
+    .btn-p:hover .iw { transform: translate(2px,-1px) scale(1.08); }
+    .btn-s {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--body); font-size: 14px; font-weight: 400;
+      color: var(--g900); background: transparent;
+      border: 1.5px solid var(--bdr-m); cursor: pointer;
+      padding: 12px 26px; border-radius: 100px; text-decoration: none;
+      transition: all .4s var(--ease);
+    }
+    .btn-s:hover { background: var(--g100); border-color: var(--g500); transform: translateY(-2px); }
+
+    /* ══════════════════════════════════════
+       1. HERO — centered, no decorative rings
+    ══════════════════════════════════════ */
+    #hero {
+      padding: 140px 40px 120px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-content { max-width: 560px; }
+
+    .hero-kicker {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 12px; font-weight: 400;
+      color: var(--tx3); letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+    .hero-kicker-line { display: block; width: 24px; height: 1px; background: var(--tx3); }
+
+    .hero-hl {
+      font-family: var(--display);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.025em; color: var(--g900); margin-bottom: 22px;
+    }
+    .hero-hl .accent { color: var(--a500); }
+
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 17px); font-weight: 300;
+      color: var(--tx2); line-height: 1.72;
+      margin-bottom: 14px;
+    }
+    .hero-add {
+      font-size: 14px; font-weight: 300; font-style: italic;
+      color: var(--tx3); line-height: 1.75;
+      margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* Hero image */
+    .hero-image-wrap {
+      border-radius: 24px; overflow: hidden;
+      box-shadow: var(--sh-lg);
+      aspect-ratio: 4/5;
+      position: relative;
+    }
+    .hero-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      display: block;
+    }
+
+    @media (max-width: 900px) {
+      #hero { padding: 88px 20px 56px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+      .hero-content { max-width: 100%; }
+      .hero-image-wrap { aspect-ratio: 16/9; border-radius: 18px; }
+    }
+
+    /* ══════════════════════════════════════
+       2. WARUM TOSAM
+    ══════════════════════════════════════ */
+    #warum { background: var(--g800); padding: 100px 0; }
+    #warum .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; text-align: center; }
+    #warum .hl { color: var(--cream); }
+
+    .warum-body {
+      font-size: clamp(15px, 1.6vw, 17px); font-weight: 300;
+      color: rgba(253,250,244,0.70); line-height: 1.82;
+      margin-top: 32px; max-width: 660px; margin-left: auto; margin-right: auto;
+    }
+    .warum-quote-block {
+      border-top: 2px solid var(--a500); padding-top: 28px; margin-top: 40px;
+      max-width: 660px; margin-left: auto; margin-right: auto;
+    }
+    .warum-quote {
+      font-family: var(--display);
+      font-size: clamp(17px, 2vw, 22px); font-weight: 600;
+      color: var(--cream); line-height: 1.5;
+    }
+    .warum-statement {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px; padding: 32px 36px;
+      margin-top: 40px; max-width: 660px; margin-left: auto; margin-right: auto;
+    }
+    .warum-statement p {
+      font-size: clamp(15px, 1.5vw, 16px); font-weight: 300;
+      color: rgba(253,250,244,0.68); line-height: 1.80;
+    }
+
+    @media (max-width: 768px) {
+      #warum .wrap { padding: 0 20px; }
+    }
+
+    /* ══════════════════════════════════════
+       3a. LEITGESCHICHTE
+    ══════════════════════════════════════ */
+    #leitgeschichte { max-width: 1200px; margin: 0 auto; padding: 100px 40px 80px; }
+
+    .article-outer {
+      background: var(--cream-dim); border: 1px solid var(--bdr-l);
+      border-radius: 28px; padding: 8px;
+      margin-top: 44px; box-shadow: var(--sh-lg);
+    }
+    .article-inner {
+      background: var(--cream); border-radius: 21px; padding: 60px 64px;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.95);
+    }
+    .article-img {
+      width: 100%; aspect-ratio: 16/7;
+      border-radius: 14px; margin-bottom: 40px;
+      overflow: hidden; position: relative;
+    }
+    .article-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 40%;
+      display: block;
+    }
+    .article-meta {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--tx3); margin-bottom: 16px;
+    }
+    .article-title {
+      font-family: var(--display);
+      font-size: clamp(22px, 3vw, 36px); font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.02em;
+      color: var(--g900); margin-bottom: 18px;
+    }
+    .article-teaser {
+      font-size: clamp(15px, 1.7vw, 18px); font-style: italic;
+      font-weight: 300; color: var(--tx2);
+      line-height: 1.65; margin-bottom: 36px;
+      padding-bottom: 32px; border-bottom: 1px solid var(--bdr-l);
+    }
+    .article-body p {
+      font-size: clamp(15px, 1.5vw, 17px); font-weight: 300;
+      color: var(--tx1); line-height: 1.88; margin-bottom: 22px;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-pullquote {
+      font-family: var(--display);
+      font-size: clamp(16px, 1.9vw, 20px); font-weight: 600;
+      color: var(--a700); border-left: 3px solid var(--a300);
+      padding: 4px 0 4px 24px; margin: 32px 0; line-height: 1.48;
+    }
+
+    @media (max-width: 768px) {
+      #leitgeschichte { padding: 64px 20px 56px; }
+      .article-inner { padding: 28px 24px; }
+      .article-outer { border-radius: 20px; padding: 5px; }
+    }
+
+    /* ══════════════════════════════════════
+       3b. SO ARBEITET TOSAM — dark green bg
+    ══════════════════════════════════════ */
+    #methodik { background: var(--g800); padding: 80px 0; }
+    #methodik .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    #methodik .hl { color: var(--cream); }
+    #methodik .sub { color: rgba(253,250,244,0.65); max-width: 520px; }
+
+    .method-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 16px; margin-top: 44px;
+    }
+    .method-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 28px 24px;
+      transition: background .4s var(--ease), transform .4s var(--ease);
+    }
+    .method-card:hover { background: rgba(255,255,255,0.09); transform: translateY(-3px); }
+    .method-num {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--a300); margin-bottom: 10px;
+    }
+    .method-card-title {
+      font-family: var(--display); font-size: 18px; font-weight: 700;
+      color: var(--cream); margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .method-card-text {
+      font-size: 14px; font-weight: 300;
+      color: rgba(253,250,244,0.60); line-height: 1.65;
+    }
+
+    @media (max-width: 1024px) { .method-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 768px) {
+      #methodik .wrap { padding: 0 20px; }
+      .method-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ══════════════════════════════════════
+       4. NEWSLETTER — warm amber-tint bg
+    ══════════════════════════════════════ */
+    #newsletter { background: var(--a50); padding: 100px 0; }
+    #newsletter .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+    .nl-layout {
+      display: grid; grid-template-columns: 1fr 1.15fr;
+      gap: 80px; align-items: center; margin-top: 52px;
+    }
+    .nl-intro h2 {
+      font-family: var(--display);
+      font-size: clamp(22px, 2.8vw, 36px); font-weight: 700;
+      color: var(--g900); line-height: 1.22;
+      letter-spacing: -0.02em; margin-bottom: 14px;
+    }
+    .nl-intro p {
+      font-size: clamp(15px, 1.5vw, 17px); font-weight: 300;
+      color: var(--tx2); line-height: 1.72; margin-bottom: 32px;
+    }
+    .nl-perks { display: flex; flex-direction: column; gap: 12px; }
+    .nl-perk {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(253,250,244,0.85);
+      border: 1px solid var(--a100);
+      border-radius: 12px; padding: 12px 16px; box-shadow: var(--sh-xs);
+    }
+    .nl-perk-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--a100);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nl-perk-title { font-size: 14px; font-weight: 500; color: var(--g900); }
+    .nl-perk-sub { font-size: 12px; font-weight: 300; color: var(--tx3); margin-top: 1px; }
+
+    .nl-bezel {
+      background: white; border: 1px solid var(--bdr-l);
+      border-radius: 24px; padding: 6px; box-shadow: var(--sh-lg);
+    }
+    .nl-bezel-inner { background: var(--cream); border-radius: 19px; overflow: hidden; }
+    .nl-header {
+      background: var(--g800); padding: 22px 28px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nl-header-title {
+      font-family: var(--display); font-size: 17px; font-weight: 700;
+      color: var(--cream); letter-spacing: -0.01em;
+    }
+    .nl-header-week {
+      font-size: 11px; font-weight: 300;
+      color: rgba(253,250,244,0.40); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .nl-body { padding: 28px 28px 32px; }
+    .nl-story-hl {
+      font-family: var(--display);
+      font-size: clamp(16px,1.9vw,20px); font-weight: 700;
+      color: var(--g900); margin-bottom: 10px; line-height: 1.25; letter-spacing: -0.01em;
+    }
+    .nl-story-text {
+      font-size: 14px; font-weight: 300; color: var(--tx2);
+      line-height: 1.72; margin-bottom: 22px;
+      padding-bottom: 22px; border-bottom: 1px solid var(--bdr-l);
+    }
+    .nl-items { display: flex; flex-direction: column; gap: 14px; }
+    .nl-item { display: flex; gap: 14px; align-items: flex-start; }
+    .nl-badge {
+      flex-shrink: 0; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--g700); background: var(--g100);
+      padding: 3px 10px; border-radius: 100px;
+      margin-top: 3px; white-space: nowrap;
+    }
+    .nl-item-title { font-size: 14px; font-weight: 400; color: var(--g900); line-height: 1.4; margin-bottom: 2px; }
+    .nl-item-sub { font-size: 13px; font-weight: 300; color: var(--tx3); line-height: 1.5; }
+
+    @media (max-width: 900px) { .nl-layout { grid-template-columns: 1fr; gap: 48px; margin-top: 40px; } }
+    @media (max-width: 768px) { #newsletter .wrap { padding: 0 20px; } }
+    @media (max-width: 480px) {
+      .nl-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .nl-body { padding: 22px 20px 24px; }
+    }
+
+    /* ══════════════════════════════════════
+       5. BETEILIGUNG
+    ══════════════════════════════════════ */
+    #beteiligung { max-width: 1200px; margin: 0 auto; padding: 100px 40px; }
+
+    .beteili-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: start;
+    }
+    .beteili-text {
+      font-size: clamp(15px, 1.6vw, 17px); font-weight: 300;
+      color: var(--tx2); line-height: 1.8; margin-bottom: 28px;
+    }
+    .beteili-hints { display: flex; flex-direction: column; gap: 10px; }
+    .beteili-hint {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--g100);
+      border: 1px solid var(--bdr-l);
+      border-radius: 12px; padding: 12px 16px;
+    }
+    .beteili-hint-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--cream);
+      border: 1.5px solid var(--g200);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .beteili-hint-text {
+      font-size: 14px; font-weight: 400; color: var(--tx2);
+    }
+
+    .form-bezel {
+      background: var(--cream-dim); border: 1px solid var(--bdr-l);
+      border-radius: 26px; padding: 7px; box-shadow: var(--sh-sm);
+    }
+    .form-inner {
+      background: var(--cream); border-radius: 20px; padding: 40px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .form-group { margin-bottom: 22px; }
+    .form-label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--g900); margin-bottom: 8px; letter-spacing: 0.01em;
+    }
+    .form-textarea {
+      width: 100%; background: var(--cream-dim);
+      border: 1.5px solid var(--bdr-l); border-radius: 14px;
+      padding: 14px 16px; font-family: var(--body);
+      font-size: 14px; font-weight: 300; color: var(--tx1);
+      line-height: 1.65; resize: none; outline: none; height: 96px;
+      transition: border-color .3s var(--ease), background .3s var(--ease);
+    }
+    .form-textarea:focus { border-color: var(--g500); background: white; }
+    .form-textarea::placeholder { color: var(--tx3); font-style: italic; }
+    .form-hint {
+      font-size: 12px; font-weight: 300; color: var(--tx3);
+      font-style: italic; text-align: center; margin-top: 14px;
+    }
+
+    @media (max-width: 900px) { .beteili-grid { grid-template-columns: 1fr; gap: 40px; } }
+    @media (max-width: 768px) {
+      #beteiligung { padding: 64px 20px; }
+      .form-inner { padding: 28px 24px; }
+    }
+
+    /* ══════════════════════════════════════
+       6. AUSBLICK — 2×2 text cards, no map
+    ══════════════════════════════════════ */
+    #ausblick { background: var(--cream-dim); padding: 100px 0; }
+    #ausblick .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+    .ausblick-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 20px; margin-top: 52px;
+    }
+    .ausblick-card {
+      background: var(--cream); border: 1px solid var(--bdr-l);
+      border-radius: 22px; padding: 32px 28px; box-shadow: var(--sh-xs);
+      transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .ausblick-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--g700) 0%, var(--g500) 100%);
+      opacity: 0; transition: opacity .4s var(--ease);
+    }
+    .ausblick-card:hover { transform: translateY(-5px); box-shadow: var(--sh-md); }
+    .ausblick-card:hover::after { opacity: 1; }
+    .ausblick-pill {
+      display: inline-block; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--tx3); background: var(--cream-mid);
+      padding: 4px 10px; border-radius: 100px; margin-bottom: 18px;
+    }
+    .ausblick-card-title {
+      font-family: var(--display); font-size: 19px; font-weight: 700;
+      color: var(--g900); margin-bottom: 10px;
+      letter-spacing: -0.01em; line-height: 1.25;
+    }
+    .ausblick-card-text {
+      font-size: 14px; font-weight: 300; color: var(--tx2); line-height: 1.72;
+    }
+
+    @media (max-width: 768px) {
+      .ausblick-grid { grid-template-columns: 1fr; }
+      #ausblick .wrap { padding: 0 20px; }
+    }
+
+    /* ══════════════════════════════════════
+       7. ABSCHLUSS
+    ══════════════════════════════════════ */
+    #abschluss { padding: 120px 0; text-align: center; }
+    #abschluss .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .abschluss-rule { width: 36px; height: 1px; background: var(--bdr-m); margin: 0 auto 44px; }
+    .abschluss-hl {
+      font-family: var(--display);
+      font-size: clamp(42px, 6.5vw, 84px);
+      font-weight: 700; color: var(--g900);
+      letter-spacing: -0.035em; line-height: 1.1; margin-bottom: 24px;
+    }
+    .abschluss-hl .accent { color: var(--a500); }
+    .abschluss-text {
+      font-size: clamp(16px, 1.7vw, 19px); font-weight: 300;
+      color: var(--tx2); line-height: 1.68;
+      max-width: 660px; margin: 0 auto 52px;
+    }
+    @media (max-width: 768px) { #abschluss { padding: 80px 0; } #abschluss .wrap { padding: 0 20px; } }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--bdr-l); padding: 36px 40px;
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo {
+      font-family: var(--display); font-size: 17px; font-weight: 700;
+      color: var(--g900); letter-spacing: -0.01em;
+    }
+    .footer-note { font-size: 12px; font-weight: 300; color: var(--tx3); letter-spacing: 0.03em; }
+    @media (max-width: 768px) {
+      .footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="proto">Prototyp · Produktidee</div>
+
+  <!-- ══ NAV ══ -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">TOSAM</a>
+    <div class="nav-links">
+      <a href="#leitgeschichte" class="nav-link">Leitgeschichte</a>
+      <a href="#newsletter" class="nav-link">Newsletter</a>
+      <a href="#beteiligung" class="nav-cta">Mitmachen</a>
+    </div>
+  </nav>
+
+  <!-- ══ 1. HERO — text left, image right ══ -->
+  <section id="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-kicker rv">
+          <span class="hero-kicker-line"></span>
+          Digitales Regionalmedium
+        </div>
+        <h1 class="hero-hl rv d1">
+          Was eine Region <span class="accent">zusammenhält,</span> merkt man oft erst, wenn man genauer hinschaut.
+        </h1>
+        <p class="hero-sub rv d2">
+          TOSAM ist ein digitales Regionalmedium über Orte, Gewohnheiten und Menschen, die Verbindung schaffen — und darüber, warum genau darin demokratische Kraft liegt.
+        </p>
+        <p class="hero-add rv d3">
+          Geschichten über das, was uns verbindet. Nicht laut. Nicht belehrend. Sondern nah an dem, was Menschen vor Ort wirklich wichtig ist.
+        </p>
+        <div class="hero-btns rv d4">
+          <a href="#leitgeschichte" class="btn-p">
+            Beispielgeschichte ansehen
+            <span class="iw" aria-hidden="true">↓</span>
+          </a>
+          <a href="#newsletter" class="btn-s">Newsletter-Vorschau lesen</a>
+        </div>
+      </div>
+      <div class="hero-image-wrap rv d2">
+        <img src="hero.jpg" alt="Menschen sitzen gemeinsam unter einem Baum im Abendlicht mit Blick auf eine Kleinstadt" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 2. WARUM TOSAM — no illustration ══ -->
+  <section id="warum">
+    <div class="wrap">
+      <span class="eyebrow eyebrow-inv rv">Warum TOSAM</span>
+      <h2 class="hl rv d1">
+        Manche Dinge wirken selbstverständlich. Bis sie wackeln.
+      </h2>
+      <p class="warum-body rv">
+        Das Freibad. Der Wochenmarkt. Der Jugendtreff. Der Kiosk an der Ecke. Im Alltag laufen wir oft daran vorbei. Erst wenn solche Orte unter Druck geraten, merken wir, wie viel Begegnung, Erinnerung und Zusammenhalt an ihnen hängt.
+      </p>
+      <div class="warum-quote-block rv d1">
+        <p class="warum-quote">
+          TOSAM schaut früher hin — und erzählt, was Menschen vor Ort verbindet, bevor daraus nur noch eine Lücke wird.
+        </p>
+      </div>
+      <div class="warum-statement rv d2">
+        <p>
+          TOSAM richtet den Blick auf das, was da ist: auf Orte, Rituale und Menschen, die unser Miteinander tragen und oft erst sichtbar werden, wenn sie fehlen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3a. LEITGESCHICHTE — simple header, no intro card ══ -->
+  <section id="leitgeschichte">
+    <span class="eyebrow rv">Eine Leitgeschichte aus TOSAM</span>
+    <h2 class="hl rv d1">
+      Das Freibad, an dem drei Generationen hängen
+    </h2>
+    <p class="sub rv d2" style="margin-bottom:0;">
+      Wie ein Ort, der vielen selbstverständlich erscheint, Begegnung, Erinnerung und Zusammenhalt trägt — und was auf dem Spiel steht, wenn er unter Druck gerät.
+    </p>
+
+    <div class="article-outer rv d3">
+      <div class="article-inner">
+        <div class="article-img">
+          <img src="freibad.jpg" alt="Drei Generationen sitzen nebeneinander auf einem Steg am Wasser — Großvater, Kind und junge Frau im Abendlicht" />
+        </div>
+        <p class="article-meta">Leitgeschichte · Gemeinschaft &amp; Orte</p>
+        <h3 class="article-title">Das Freibad, an dem drei Generationen hängen</h3>
+        <p class="article-teaser">
+          Ein Freibad ist mehr als ein Becken, eine Liegewiese und ein Kiosk. Es ist ein Ort, an dem sich Menschen begegnen, die sonst wenig miteinander zu tun haben.
+        </p>
+        <div class="article-body">
+          <p>An einem warmen Samstagnachmittag riecht es nach Sonnencreme, Pommesfett und nassen Handtüchern. Kinder springen vom Beckenrand, obwohl es eigentlich verboten ist. Zwei Jugendliche sitzen mit tropfenden Haaren auf der Wiese und teilen sich eine Portion Pommes. Unter dem alten Sonnenschirm am Kiosk sitzt ein Mann, der schon hier schwimmen gelernt hat, als das Nichtschwimmerbecken noch anders aussah.</p>
+          <p>Für viele ist dieses Freibad einfach ein Ort für heiße Tage. Für andere ist es ein Stück Lebensgeschichte: der erste Sprung vom Dreier, der Treffpunkt nach der Schule, der Ferienersatz, wenn Urlaub nicht drin war. Ein Ort, an dem Eltern ihre Kinder wiedererkennen, weil sie selbst einmal genauso am Beckenrand standen.</p>
+          <blockquote class="article-pullquote">
+            „Hier sieht man Leute, die man sonst das ganze Jahr kaum trifft. Man muss sich nicht verabreden. Man ist einfach da."
+          </blockquote>
+          <p>In der Stadt wird derzeit über Kosten gesprochen. Über Sanierung, Personal, Energiepreise und Besucherzahlen. Das ist notwendig. Aber es erzählt nur einen Teil der Geschichte. Denn was ein Freibad für eine Region bedeutet, lässt sich nicht allein in Eintrittskarten und Betriebskosten messen.</p>
+          <p>Hier begegnen sich Menschen, die sonst wenig miteinander zu tun haben: Schüler, Rentnerinnen, Familien, Jugendliche, Vereinsmenschen, Alleinerziehende, Zugezogene. Niemand muss einem Verein beitreten, ein Ticket kaufen oder in eine bestimmte Gruppe passen. Das Freibad ist einer dieser seltenen Orte, an denen eine Stadt für ein paar Stunden wirklich gemischt ist.</p>
+          <p>Wenn so ein Ort verschwindet, fehlt deshalb nicht nur ein Becken. Es fehlt ein Stück gemeinsamer Alltag. Ein Ort, an dem Kinder selbstständiger werden, Jugendliche ihren Sommer verbringen, ältere Menschen sichtbar bleiben und Menschen sich begegnen, ohne dass jemand vorher eine Einladung verschicken muss.</p>
+          <p>Eine Bademeisterin sagt, sie erkenne viele Kinder jedes Jahr wieder. Erst mit Schwimmflügeln, später am Sprungbrett, irgendwann mit den eigenen Freunden. „Man sieht hier, wie ein Ort mitwächst", sagt sie. Vielleicht ist genau das der Punkt: Manche Orte wirken unscheinbar, weil sie so selbstverständlich sind.</p>
+          <p>TOSAM schaut auf solche Orte, bevor sie nur noch als Kostenstelle oder Erinnerung auftauchen. Nicht, um jede Veränderung zu verhindern. Sondern um sichtbar zu machen, was wirklich auf dem Spiel steht: Räume, die eine Region leise zusammenhalten.</p>
+          <p>Denn manchmal beginnt demokratisches Miteinander nicht im Sitzungssaal. Manchmal beginnt es auf einer Liegewiese, zwischen Handtüchern, Pommes und der einfachen Erfahrung, dass dieser Ort nicht nur irgendwem gehört — sondern uns allen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3b. SO ARBEITET TOSAM — dark green ══ -->
+  <section id="methodik">
+    <div class="wrap">
+      <span class="eyebrow eyebrow-inv rv">Unser Ansatz</span>
+      <h2 class="hl rv d1">So arbeitet TOSAM</h2>
+      <p class="sub rv d2">Jede Leitgeschichte folgt einem Aufbau, der von der konkreten Szene zur gesellschaftlichen Bedeutung führt.</p>
+      <div class="method-grid">
+        <div class="method-card rv">
+          <div class="method-num">01</div>
+          <div class="method-card-title">Szene</div>
+          <p class="method-card-text">Wir beginnen dort, wo Bedeutung spürbar wird: bei Menschen, Orten und konkreten Momenten.</p>
+        </div>
+        <div class="method-card rv d1">
+          <div class="method-num">02</div>
+          <div class="method-card-title">Stimmen</div>
+          <p class="method-card-text">Wir hören Menschen zu, die an einem Ort, Ritual oder Thema wirklich hängen.</p>
+        </div>
+        <div class="method-card rv d2">
+          <div class="method-num">03</div>
+          <div class="method-card-title">Kontext</div>
+          <p class="method-card-text">Wir ordnen ein, was sich verändert, warum etwas unter Druck steht und welche Fragen dahinterliegen.</p>
+        </div>
+        <div class="method-card rv d3">
+          <div class="method-num">04</div>
+          <div class="method-card-title">Bedeutung</div>
+          <p class="method-card-text">Wir zeigen, was eine Geschichte über Gemeinschaft, Zugehörigkeit und demokratisches Miteinander erzählt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 4. NEWSLETTER — warm amber-tint bg ══ -->
+  <section id="newsletter">
+    <div class="wrap">
+      <div class="nl-layout">
+        <div class="nl-intro">
+          <span class="eyebrow rv">Newsletter</span>
+          <h2 class="rv d1">Einmal pro Woche ein anderer Blick auf die Region.</h2>
+          <p class="rv d2">Der TOSAM-Newsletter bringt die neue Leitgeschichte, kurze Einordnungen und eine Frage an die Community direkt ins Postfach.</p>
+          <div class="nl-perks rv d3">
+            <div class="nl-perk">
+              <div class="nl-perk-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a700)" stroke-width="2" stroke-linecap="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+                </svg>
+              </div>
+              <div>
+                <div class="nl-perk-title">Jede Woche, kostenlos</div>
+                <div class="nl-perk-sub">Direkt ins Postfach — kein Abo nötig</div>
+              </div>
+            </div>
+            <div class="nl-perk">
+              <div class="nl-perk-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a700)" stroke-width="2" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                </svg>
+              </div>
+              <div>
+                <div class="nl-perk-title">Kein Nachrichten-Strom</div>
+                <div class="nl-perk-sub">Eine kuratierte Geschichte — nicht fünfzig</div>
+              </div>
+            </div>
+            <div class="nl-perk">
+              <div class="nl-perk-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a700)" stroke-width="2" stroke-linecap="round">
+                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <div class="nl-perk-title">Aus der Region, für die Region</div>
+                <div class="nl-perk-sub">Keine überregionale Vereinfachung</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nl-bezel rv d2">
+          <div class="nl-bezel-inner">
+            <div class="nl-header">
+              <div class="nl-header-title">TOSAM</div>
+              <div class="nl-header-week">Diese Woche</div>
+            </div>
+            <div class="nl-body">
+              <div class="nl-story-hl">Das Freibad, an dem drei Generationen hängen</div>
+              <p class="nl-story-text">
+                Es riecht nach Sonnencreme, Pommes und nassen Handtüchern. Kinder springen vom Beckenrand, Jugendliche liegen auf der Wiese, ältere Menschen sitzen im Schatten am Kiosk. Auf den ersten Blick ein Freibad. Auf den zweiten ein Ort, an dem eine Stadt sich begegnet.
+              </p>
+              <div class="nl-items">
+                <div class="nl-item">
+                  <span class="nl-badge">Der Ort</span>
+                  <div>
+                    <div class="nl-item-title">Öffentliche Treffpunkte ohne Verabredung</div>
+                    <div class="nl-item-sub">Warum sie für das Miteinander so wichtig sind.</div>
+                  </div>
+                </div>
+                <div class="nl-item">
+                  <span class="nl-badge">Die Lage</span>
+                  <div>
+                    <div class="nl-item-title">Freibäder unter Druck</div>
+                    <div class="nl-item-sub">Kosten, Sanierungsbedarf und fehlendes Personal.</div>
+                  </div>
+                </div>
+                <div class="nl-item">
+                  <span class="nl-badge">Die Stimme</span>
+                  <div>
+                    <div class="nl-item-title">Eine Bademeisterin erzählt</div>
+                    <div class="nl-item-sub">Warum sie manche Kinder über Jahre aufwachsen sieht.</div>
+                  </div>
+                </div>
+                <div class="nl-item">
+                  <span class="nl-badge">Die Frage</span>
+                  <div>
+                    <div class="nl-item-title">Woran hängst du in deiner Region — und warum?</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5. BETEILIGUNG — visual hints ══ -->
+  <section id="beteiligung">
+    <div class="beteili-grid">
+      <div>
+        <span class="eyebrow rv">Mitmachen</span>
+        <h2 class="hl rv d1">Woran hängst du<br>in deiner Region?</h2>
+        <p class="beteili-text rv d2">
+          TOSAM sammelt Hinweise auf Orte, Gewohnheiten und Menschen, die mehr bedeuten, als man im Alltag merkt. Aus diesen Beobachtungen entstehen neue Recherchen und Geschichten.
+        </p>
+        <div class="beteili-hints rv d3">
+          <div class="beteili-hint">
+            <div class="beteili-hint-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="beteili-hint-text">Keine Registrierung nötig</span>
+          </div>
+          <div class="beteili-hint">
+            <div class="beteili-hint-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="beteili-hint-text">Hinweise werden redaktionell geprüft</span>
+          </div>
+          <div class="beteili-hint">
+            <div class="beteili-hint-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="beteili-hint-text">Keine Kommentarspaltendynamik — nur Beobachtungen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv d2">
+        <div class="form-bezel">
+          <div class="form-inner">
+            <form onsubmit="return false;">
+              <div class="form-group">
+                <label class="form-label" for="f1">Was verbindet Menschen bei dir vor Ort?</label>
+                <textarea class="form-textarea" id="f1" placeholder="Ein Freibad, ein Markt, ein Vereinsheim, ein Kiosk, ein Ritual, eine Person …"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="f2">Warum ist dir das wichtig?</label>
+                <textarea class="form-textarea" id="f2" placeholder="Was würde fehlen, wenn es diesen Ort, diese Gewohnheit oder diese Person nicht mehr gäbe?"></textarea>
+              </div>
+              <button type="submit" class="btn-p" style="width:100%; justify-content:center;">
+                Thema vorschlagen
+                <span class="iw" aria-hidden="true">→</span>
+              </button>
+              <p class="form-hint">Prototyp — Formular sendet nicht ab</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6. AUSBLICK — 2×2 text cards, no map ══ -->
+  <section id="ausblick">
+    <div class="wrap">
+      <span class="eyebrow rv">Was daraus wachsen kann</span>
+      <h2 class="hl rv d1">Perspektiven für TOSAM</h2>
+      <p class="sub rv d2">Diese Ideen sind keine aktuellen Features. Sie zeigen, wohin TOSAM wachsen könnte — wenn der Kern stark ist.</p>
+
+      <div class="ausblick-grid">
+        <div class="ausblick-card rv">
+          <span class="ausblick-pill">Spätere Phase</span>
+          <div class="ausblick-card-title">Regionale Gesprächsabende</div>
+          <p class="ausblick-card-text">TOSAM kann Geschichten aus der Plattform in echte Begegnungen vor Ort verlängern — Abende, an denen aus Leserinnen und Lesern Gesprächspartner werden.</p>
+        </div>
+        <div class="ausblick-card rv d1">
+          <span class="ausblick-pill">Spätere Phase</span>
+          <div class="ausblick-card-title">Audio-Geschichten</div>
+          <p class="ausblick-card-text">Ausgewählte Leitgeschichten könnten mit Stimmen, Atmosphäre und O-Tönen hörbar werden — für unterwegs, beim Pendeln oder zuhause.</p>
+        </div>
+        <div class="ausblick-card rv d2">
+          <span class="ausblick-pill">Spätere Phase</span>
+          <div class="ausblick-card-title">TOSAM-Archiv</div>
+          <p class="ausblick-card-text">Ein wachsendes Archiv über Orte, Rituale und Menschen, die eine Region leise zusammenhalten — als kollektives Gedächtnis, nicht als Nachrichtenstrom.</p>
+        </div>
+        <div class="ausblick-card rv d3">
+          <span class="ausblick-pill">Spätere Phase</span>
+          <div class="ausblick-card-title">TOSAM lokal</div>
+          <p class="ausblick-card-text">Hyper-lokale Ausgaben für einzelne Stadtteile und Gemeinden — für Orte, die zu klein für Regionaljournalismus sind, aber zu wichtig, um unsichtbar zu bleiben.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 7. ABSCHLUSS ══ -->
+  <section id="abschluss">
+    <div class="wrap">
+      <div class="abschluss-rule rv" aria-hidden="true"></div>
+      <h2 class="abschluss-hl rv d1">
+        Nicht lauter.<br><span class="accent">Näher.</span>
+      </h2>
+      <p class="abschluss-text rv d2">
+        TOSAM ist kein Medium über das, was am lautesten streitet. Es ist ein Medium über das, was eine Region leise zusammenhält.
+      </p>
+      <div class="rv d3">
+        <a href="#hero" class="btn-p" id="topBtn">
+          Wieder zum Anfang
+          <span class="iw" aria-hidden="true">↑</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="footer-logo">TOSAM</div>
+    <div class="footer-note">Prototyp für eine Produktidee · 2025</div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    const rvEls = document.querySelectorAll('.rv');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+    rvEls.forEach(el => obs.observe(el));
+
+    window.addEventListener('load', () => {
+      document.querySelectorAll('#hero .rv').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), 160 + i * 85);
+      });
+    });
+
+    document.getElementById('topBtn').addEventListener('click', e => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

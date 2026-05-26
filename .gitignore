@@ -1,0 +1,6 @@
+# Claude Code local settings (contain absolute local paths)
+.claude/settings.local.json
+.claude/launch.json
+
+# macOS
+.DS_Store
